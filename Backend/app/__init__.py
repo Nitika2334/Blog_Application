@@ -14,7 +14,7 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
     bcrypt.init_app(app)
-
+   
     from app.Models.UserModel import User
     from app.Models.CommentModel import Comment
     from app.Models.PostModel import Post

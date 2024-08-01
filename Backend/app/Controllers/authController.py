@@ -1,9 +1,15 @@
 from flask import Blueprint, request, jsonify
 from app.Models.UserModel import User
-from app import db, bcrypt
-from flask_jwt_extended import create_access_token, jwt_required
+from app import db, bcrypt, jwt
+from flask_jwt_extended import create_access_token, jwt_required, JWTManager, get_jwt
 
 auth_controller = Blueprint('auth', __name__)
+BLACKLIST = set()
+
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blacklist(jwt_header, jwt_payload):
+    jti = jwt_payload['jti']
+    return jti in BLACKLIST
 
 @auth_controller.route('/register', methods=['POST'])
 def register():
@@ -39,7 +45,20 @@ def login():
     
     if user and bcrypt.check_password_hash(user.password, data['password']):
         access_token = create_access_token(identity=user.id)
-        return jsonify(access_token=access_token), 200
+        return jsonify({
+            'message': 'Login successful',
+            'access_token': access_token
+        }), 200
     return jsonify({'message': 'Invalid credentials'}), 401
+
+@auth_controller.route('/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    try:
+        jti = get_jwt()['jti']
+        BLACKLIST.add(jti)
+        return jsonify({"message": "Successfully logged out"}), 200
+    except Exception as e:
+        return jsonify({"message": "Logout failed", "error": str(e)}), 500
 
 
