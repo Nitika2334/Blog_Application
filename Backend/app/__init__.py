@@ -12,9 +12,16 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
 
+    from app.Models.UserModel import User
+    from app.Models.CommentModel import Comment
+    from app.Models.PostModel import Post
+
     from app.Controllers.authController import auth_controller
     from app.Controllers.postController import post_controller
     from app.Controllers.commentController import comment_controller
+
+    with app.app_context():
+        db.create_all() 
 
     app.register_blueprint(auth_controller, url_prefix='/api')
     # app.register_blueprint(post_controller, url_prefix='/api')
