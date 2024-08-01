@@ -3,8 +3,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 import datetime
 from functools import wraps
-from Backend.Models.UserModel import User
-from Backend import db
+from app.Models.UserModel import User
+from app import db
 
 auth_controller = Blueprint('auth', __name__)
 
