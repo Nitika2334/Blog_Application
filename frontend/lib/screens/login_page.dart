@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/text_field.dart';
+import 'package:frontend/controllers/loginController.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,6 +12,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  LoginController controller = Get.put(LoginController());
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -20,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: Center(
           child: Column(
+            mainAxisSize: MainAxisSize.max,
             children: [
               const SizedBox(height: 80),
               const Icon(Icons.book, size: 80),
@@ -48,124 +52,109 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-
-
               const SizedBox(height: 10),
-
-              Container(
-                width: 350,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   children: [
-                     Text(
-                      'Enter user name',
-                       style: TextStyle(fontSize: 16, color: Colors.grey.shade800),
-                     ),
-
-
-                    const SizedBox(height: 8),
-
-                    GenTextField(
-                      controller: usernameController,
-                      hintText: 'eg. John Doe',
-                      obscureText: false,
-                    ),
-                  ],
-                ),
-              ),
-
-
-
-              const SizedBox(height: 16),
-
-
-              Container(
-                width: 350,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                     Text(
-                      'Enter password',
-                      style: TextStyle(fontSize: 16, color: Colors.grey.shade800),
-                    ),
-                    GenTextField( // Use your custom text field here
-                      controller: passwordController,
-                      hintText: 'eg. password',
-                      obscureText: true,
-                    ),
-                  ],
-                ),
-              ),
-
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 30, 10),
-                  child: TextButton(
-                    onPressed: () {
-                      // To be implemented later
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue[800], backgroundColor: Colors.transparent,
-                      side: BorderSide.none,
-                    ),
-                    child: const Text('Forgot Password?', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
-                  ),
-                ),
-              ),
-
-
-              
-              SizedBox(
-                width: 350,
-                height: 50,
-                child: TextButton(
-                  onPressed: (){
-                    // Login function
-                  },
-                  
-                  style: TextButton.styleFrom(
-
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue[700],
-                    side: BorderSide.none,
-                  ),
-                  child: const Text('Login', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
-                ),
-              ),
-
-
-              SizedBox(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Don\'t have an account?'),
-                    TextButton(
-                      onPressed: () {
-                        context.go("/signup");
-                      },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.blue[800], backgroundColor: Colors.transparent,
-                        side: BorderSide.none,
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Text('Sign up', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Enter user name',
+                            style: TextStyle(fontSize: 16, color: Colors.grey.shade800),
+                          ),
+                          const SizedBox(height: 8),
+                          GenTextField(
+                            controller: controller.username,
+                            hintText: 'eg. John Doe',
+                            obscureText: false,
+                          ),
+                        ],
+                      ),
                     ),
+                    const SizedBox(height: 16),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Enter password',
+                            style: TextStyle(fontSize: 16, color: Colors.grey.shade800),
+                          ),
+                          GenTextField(
+                            controller: controller.password,
+                            hintText: 'eg. password',
+                            obscureText: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 10, 30, 10),
+                        child: TextButton(
+                          onPressed: () {
+                            // To be implemented later
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.blue[800], backgroundColor: Colors.transparent,
+                            side: BorderSide.none,
+                          ),
+                          child: const Text('Forgot Password?', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: TextButton(
+                        onPressed: () async {
+                          await controller.submit(context);
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.blue[700],
+                          side: BorderSide.none,
+                        ),
+                        child: const Text('Login', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                      ),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Don\'t have an account?'),
+                        TextButton(
+                          onPressed: () {
+                            context.go("/signup");
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.blue[800], backgroundColor: Colors.transparent,
+                            side: BorderSide.none,
+                          ),
+                          child: const Text('Sign up', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                        ),
+                      ],
+                    )
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

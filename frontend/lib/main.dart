@@ -26,7 +26,23 @@ class MyApp extends StatelessWidget {
 
 
   final GoRouter _router = GoRouter( initialLocation: "/login",routes: [
+    GoRoute(path: "/home", builder: ((context, state) => const HomePage())),
     GoRoute(path: "/login", builder: ((context, state) => const LoginPage())),
     GoRoute(path: "/signup", builder: ((context, state) => const SignupPage())),
   ]);
+
 }
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home Page'),
+      ),
+    );
+  }
+}
+
